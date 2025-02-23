@@ -1,0 +1,713 @@
+/* Allgemeines Styling */
+body {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 5%;
+    padding-right: 5%;
+    font-family: 'Roboto', sans-serif;
+    background-color: #ffffff; /* Modernes Weiß */
+    color: #4f4f4f; /* Neutrales, modernes Grau */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.container-logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.picture-box-logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 10%;
+    max-width: 150px;
+    max-height: 150px;
+    height: auto;
+}
+
+.picture-box-logo img {
+    width: 100%;
+    height: auto;
+}
+
+.picture-box-logo:hover img {
+    animation: rotateLogo 0.6s ease-in-out;
+    animation-delay: 1s;
+}
+
+@keyframes rotateLogo {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.container-shop {
+    display: flex;
+    width: 90%;
+    height: 75%;
+    max-width: 1200px;
+    overflow: hidden;
+    background-color: #e6f9e6; /* Light pastel green */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+}
+
+.container-left,
+.container-right {
+    flex: 1;
+    margin: 10px;
+    padding: 50px;
+    border-radius: 8px;
+    background-color: #f5fff0; /* Very light pastel green */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    height: 80%;
+    overflow: hidden;
+    max-width: 1200px;
+}
+
+.container-left {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.container-right {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
+}
+
+.container-search {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.container-search input {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    background-color: #e6f9e6; /* Light pastel green */
+    color: #4f4f4f; /* Neutrales Grau */
+}
+
+.container-search input::placeholder {
+    color: #7a7a7a; /* Helleres Grau */
+}
+
+.container-search input::focus {
+    outline: none;
+}
+
+.container-search p {
+    margin: 10px 0 0;
+    font-size: 14px;
+    color: #4f4f4f; /* Neutrales Grau */
+}
+
+li {
+    list-style-type: none;
+    margin: 10px 0;
+    color: #4f4f4f; /* Neutrales Grau */
+}
+
+/* Styling für den Katalog */
+.container-catalog {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: stretch;
+    border: 1px solid #90c990;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 10px 0;
+    background-color: #e6f9e6; /* Light pastel green background */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    height: auto;
+    gap: 10px;
+}
+
+.container-catalog-text,
+.container-catalog-picture {
+    flex: 0 0 50%; /* Exakt 50% für beide Seiten */
+    max-width: 50%;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.container-catalog-text {
+    padding-right: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: #4f4f4f; /* Neutrales Grau */
+}
+
+.catalog-title {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #333333; /* Dunkleres Grau */
+}
+
+.catalog-price-tag {
+    font-size: 1.2em;
+    color: #2e4f2e; /* Dunkles Grün */
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.catalog-shopping-cart-button {
+    padding: 10px 20px;
+    font-size: 1em;
+    background-color: #467a46; /* Dunkleres Grün */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+}
+
+.catalog-shopping-cart-button:hover {
+    background-color: #355a35;
+}
+
+.catalog-shopping-cart-button:active {
+    transform: scale(0.95);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    background-color: #2c492c;
+}
+
+.container-catalog-picture {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-left: 10px;
+}
+
+.catalog-picture-box {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: #f5fff0;
+    max-width: 300px;
+    max-height: 300px;
+}
+
+.catalog-picture-box img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 2px solid #90c990;
+    transition: transform 0.3s ease;
+}
+
+.catalog-picture-box img:hover {
+    transform: scale(1.05);
+}
+
+.container-catalog p {
+    margin: 5px 0;
+    font-size: 16px;
+    color: #4f4f4f; /* Neutrales Grau */
+}
+
+.container-catalog p:first-child {
+    font-weight: bold;
+    font-size: 18px;
+    color: #333333; /* Dunkleres Grau */
+}
+
+
+.container-shopping-cart {
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    border: 1px solid #90c990;
+    border-radius: 10px;
+    background-color: #f5fff0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    color: #4f4f4f; /* Neutrales Grau */
+}
+
+.container-shopping-cart-upper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.container-shopping-cart-upper > div {
+    flex: 0 0 33%;
+    text-align: center;
+}
+
+.shopping-cart-amount button {
+    font-size: 14px;
+    padding: 0px;
+    padding-top: 2px;
+    width: 30px;
+    height: 30px;
+    background-color: #467a46;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+    text-align: center; 
+    vertical-align: middle;
+    margin: 2px;
+}
+
+.shopping-cart-amount button:hover {
+    background-color: #355a35;
+}
+
+.shopping-cart-amount button:active {
+    transform: scale(0.9);
+    background-color: #2c492c;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.shopping-cart-text p {
+    font-size: 14px;
+    color: #4f4f4f; /* Neutrales Grau */
+    margin: 0;
+}
+
+.shopping-cart-picture {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.shopping-cart-picture-box {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: #e6f9e6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.shopping-cart-picture-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.shopping-cart-picture-box img:hover {
+    transform: scale(1.1);
+}
+
+.container-shopping-cart-downer {
+    margin-top: 10px;
+    text-align: right;
+    font-size: 16px;
+    color: #5a5a5a; /* Etwas dunkleres Grau */
+}
+
+.container-shopping-cart-downer p {
+    margin: 5px 0;
+    font-size: 16px;
+    color: #7a7a7a; /* Leichtes Grau für alle Texte */
+}
+
+.container-shopping-cart-downer p:last-child {
+    font-size: 16px;
+    color: #2e4f2e; /* Dunkelgrün, passend zum Rest */
+}
+
+
+/* Stripe Platzhalter */
+.STRIPE {
+    padding: 10px 20px;
+    font-size: 1.2em;
+    background-color: #6772E5; /* Stripe Blau */
+    color: white; /* Weißer Text */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+    font-weight: bold;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.STRIPE:hover {
+    background-color: #5469D4; /* Etwas dunkleres Blau */
+    transform: scale(1.05); /* Leichte Vergrößerung */
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2); /* Stärkerer Schatten */
+}
+
+.STRIPE:active {
+    background-color: #4353B7; /* Noch dunkleres Blau */
+    transform: scale(0.95); /* Leichtes Schrumpfen */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Reduzierter Schatten */
+}
+
+.shopping-cart-switch-user-login-button {
+    font-size: 18px; /* Größere Schrift */
+    font-weight: bold;
+    color: #2e4f2e; /* Dunkelgrün */
+    background-color: transparent; /* Transparenter Hintergrund */
+    border: none;
+    cursor: pointer;
+    border-radius: 20px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.shopping-cart-switch-user-login-button:hover {
+    color: #355a35; /* Etwas dunklerer Grünton beim Hover */
+    text-decoration: underline; /* Optional: Unterstreichung beim Hover */
+}
+
+.shopping-cart-switch-user-login-button:active {
+    transform: scale(0.95); /* Klick-Effekt */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    background-color: #2e4f2e; /* Dunkelgrün */
+    color: white; /* Weiße Schrift */
+}
+
+
+.shopping-cart-user-login {
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    border: 1px solid #90c990; /* Erbt den Stil des shopping-cart Containers */
+    border-radius: 10px;
+    background-color: #f5fff0; /* Konsistenter Hintergrund */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    color: #4f4f4f; /* Neutrales Grau */
+    gap: 10px;
+}
+
+.shopping-cart-user-login p {
+    margin: 0;
+    font-size: 14px;
+    color: #4f4f4f; /* Konsistent mit anderen Texten */
+    font-weight: bold;
+}
+
+.shopping-cart-user-login input {
+    padding: 10px;
+    border: 1px solid #90c990; /* Erbt den Stil */
+    border-radius: 5px;
+    font-size: 16px;
+    background-color: #f5fff0; /* Sehr helles Grün */
+    color: #4f4f4f; /* Konsistentes Grau */
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.shopping-cart-user-login input::placeholder {
+    color: #7a7a7a; /* Helleres Grau */
+    font-style: italic;
+}
+
+.shopping-cart-user-login button {
+    padding: 10px 20px;
+    font-size: 1em;
+    background-color: #467a46; /* Dunkleres Grün, konsistent mit Katalog-Buttons */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+    font-weight: bold;
+}
+
+.shopping-cart-user-login button:hover {
+    background-color: #355a35;
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2); /* Leichter Schatteneffekt */
+}
+
+.shopping-cart-user-login button:active {
+    transform: scale(0.95);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    background-color: #2c492c;
+}
+
+/* Anpassung für final-price-box */
+#final-price-box p {
+    margin: 5px 0;
+    font-size: 16px;
+    color: #7a7a7a; /* Leichtes Grau für die oberen Texte */
+}
+
+#final-price-box p:last-child {
+    font-size: 18px;
+    font-weight: bold;
+    color: #2e4f2e; /* Dunkelgrün, passend zum Rest */
+}
+
+
+.static-show-shopping-cart {
+    position: fixed;
+    width: 60px;
+    height: 60px;
+    bottom: 20px; /* Abstand vom unteren Rand */
+    right: 20px; /* Abstand vom rechten Rand */
+    background-color: #467a46; /* Farbe des Buttons (anpassbar) */
+    color: white; /* Textfarbe */
+    border: none; /* Keine Umrandung */
+    border-radius: 50%; /* Runde Form, wenn gewünscht */
+    font-size: 24px; /* Größe des Einkaufswagen-Icons */
+    cursor: pointer; /* Zeigt an, dass es klickbar ist */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Optionaler Schatten */
+    z-index: 1000; /* Stellt sicher, dass der Button über anderen Elementen liegt */
+    transition: transform 0.2s ease-in-out, background-color 0.3s;
+}
+
+.static-show-shopping-cart:hover {
+    background-color: #355a35; /* Änderung der Farbe beim Hover */
+}
+
+.static-show-shopping-cart:active {
+    transform: scale(0.9);
+    background-color: #2c492c;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Animationen */
+.fade-slide-enter-from {
+    opacity: 0;
+    transform: translateX(100%);
+}
+
+.fade-slide-enter-to {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.fade-slide-leave-from {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.fade-slide-leave-to {
+    opacity: 0;
+    transform: translateX(100%);
+}
+
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.container-logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.picture-box-logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 10%;
+    max-width: 150px;
+    max-height: 150px;
+    height: auto;
+}
+
+.picture-box-logo img {
+    width: 100%;
+    height: auto;
+}
+
+.picture-box-logo:hover img {
+    animation: rotateLogo 0.6s ease-in-out;
+    animation-delay: 1s;
+}
+
+@keyframes rotateLogo {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.container-shop {
+    display: flex;
+    width: 90%;
+    height: 75%;
+    max-width: 1200px;
+    overflow: hidden;
+    background-color: #ffffff; /* Modernes Weiß */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+}
+
+.container-left,
+.container-right {
+    flex: 1;
+    margin: 10px;
+    padding: 50px;
+    border-radius: 8px;
+    background-color: #ffffff; /* Weißer Hintergrund */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    height: 80%;
+    overflow: hidden;
+    max-width: 1200px;
+}
+
+.container-left {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.container-right {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
+}
+
+.container-search input {
+    background-color: #f0f0e8; /* Sanftes Grau */
+    color: #5f5f5f; /* Dunkleres Grau */
+}
+
+.container-catalog {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: stretch;
+    border: 1px solid #7b6f5a; /* Brauner Akzent */
+    border-radius: 10px;
+    padding: 20px;
+    margin: 10px 0;
+    background-color: #ffffff; /* Modernes Weiß */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    height: auto;
+    gap: 10px;
+}
+
+.catalog-title {
+    color: #3d3d3d; /* Dunkles Grau */
+}
+
+.catalog-price-tag {
+    color: #6b8e23; /* Modernes Olivgrün */
+}
+
+.catalog-shopping-cart-button {
+    padding: 10px 20px;
+    font-size: 1em;
+    background-color: #7b6f5a; /* Braun */
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+}
+
+.catalog-shopping-cart-button:hover {
+    background-color: #5f4f3a; /* Dunkleres Braun */
+}
+
+.catalog-shopping-cart-button:active {
+    background-color: #4b3d2f; /* Noch dunkleres Braun */
+    transform: scale(0.95);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.catalog-picture-box img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 2px solid #6b8e23; /* Grüner Rahmen */
+    transition: transform 0.3s ease;
+}
+
+.catalog-picture-box img:hover {
+    transform: scale(1.05);
+}
+
+.shopping-cart-amount button {
+    background-color: #6b8e23; /* Grüner Akzent */
+}
+
+.shopping-cart-amount button:hover {
+    background-color: #557017; /* Dunkleres Grün */
+}
+
+.shopping-cart-amount button:active {
+    background-color: #415910; /* Noch dunkleres Grün */
+}
+
+.shopping-cart-picture-box {
+    background-color: #ffffff; /* Modernes Weiß */
+}
+
+.shopping-cart-user-login button {
+    background-color: #7b6f5a; /* Braun */
+}
+
+.shopping-cart-user-login button:hover {
+    background-color: #5f4f3a; /* Dunkleres Braun */
+}
+
+.shopping-cart-user-login button:active {
+    background-color: #4b3d2f; /* Noch dunkleres Braun */
+}
+
+.STRIPE {
+    background-color: #6b8e23; /* Modernes Grün */
+}
+
+.STRIPE:hover {
+    background-color: #557017; /* Dunkleres Grün */
+}
+
+.STRIPE:active {
+    background-color: #415910; /* Noch dunkleres Grün */
+}
+
+.static-show-shopping-cart {
+    background-color: #7b6f5a; /* Braun */
+}
+
+.static-show-shopping-cart:hover {
+    background-color: #5f4f3a; /* Dunkleres Braun */
+}
+
+.static-show-shopping-cart:active {
+    background-color: #4b3d2f; /* Noch dunkleres Braun */
+}
+
+label {
+    width: 100%;
+    display: flex;
+    flex-direction: column; /* Stack children vertically */
+    justify-content: center; /* Center vertically */
+    align-items: center; /* Center horizontally */
+}
