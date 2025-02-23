@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soft Aesthetic Shop</title>
+
+    <script src="https://unpkg.com/vue@3"></script>
+
+    <link rel="icon" type="image/x-icon" href="logo.ico">
+
+    <link rel="stylesheet" type="text/css" href="shop.css">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+    <div class="container-logo">
+        <div class="picture-box-logo">
+            <img src="./logo.png" alt="Das Firmenlogo von Soft Aesthetic Shop.">
+        </div>
+    </div>
+    <div class="container-shop"  id="app">
+    <div class="container-left">
+        <!-- Katalog -->
+        <h2>Katalog</h2>
+
+        <div class="container">
+            <div class="container-search">
+                        <label>
+                            <p style="visibility: hidden;">Eingabe Katalog</p>
+                            <input type="text" maxlength="100" v-model="search_text" placeholder="Durchsuche Artikel">
+                        </label>
+            </div>
+            <li v-for="(row, index) in catalog_json_data" :key="index">
+                <transition name="fade-slide">
+                    <div class="container-catalog" v-if="row.Produkttitel.toLowerCase().includes(search_text.toLowerCase())">
+                        <div class="container-catalog-text">
+                            <p class="catalog-title">{{row.Produkttitel}}</p>
+                            <br>
+                            <p>{{row.Kurzinhalt}}</p>
+                            <br>
+                            <p class="catalog-price-tag">{{row.PreisBrutto}}€</p>
+                            <p class="catalog-price-tag" v-if="row.Lagerbestand <= 5 && row.Lagerbestand > 0">Nur noch {{row.Lagerbestand}} Stück auf Lager!</p>
+                            <br>
+
+                            <button class="catalog-shopping-cart-button" @click="add_one_to_shopping_cart(row)" v-if="row.Lagerbestand > 0">Zum Warenkorb hinzufügen</button>
+                            <button class="catalog-shopping-cart-button" v-else disabled>Ausverkauft</button>
+
+                        </div>
+
+                        <div clas="container-catalog-picture">
+                            <div class="catalog-picture-box">
+                                <img :src="'./ressources/' + row.LinkGrafikdatei" :alt="row.Produkttitel">
+                            </div>
+                        </div>
+                    </div>
+                </transition>
+            </li>
+        </div>
+    </div>
+    
+    <transition name="fade-slide">
+        <template v-if="!shopping_cart_empty && !shopping_cart_collapsed">
+            <div class="container-right">
+                <h2>Warenkorb</h2>
+                <li v-for="(row, index) in shopping_cart_data" :key="index">
+                    <div class="container-shopping-cart">
+                        <div class="container-shopping-cart-upper">
+                            <div class="shopping-cart-amount">
+                                <p>{{row.AnzahlWarenkorb}} x {{row.PreisBrutto}}€</p>
+                                <button @click="add_one_to_shopping_cart(row)"><span class="material-symbols-outlined">add_shopping_cart</span></button>
+                                <button @click="remove_one_from_shopping_cart(row)"><span class="material-symbols-outlined">remove_shopping_cart</span></button>
+                                <button @click="remove_from_shopping_cart(row)"><span class="material-symbols-outlined">shopping_cart_off</span></button>
+                            </div>
+                            <div class="shopping-cart-text">
+                                <p>{{row.Produkttitel}}</p>
+                            </div>
+                            <div class="shopping-cart-picture">
+                                <div class="shopping-cart-picture-box">
+                                    <img :src="'./ressources/' + row.LinkGrafikdatei" :alt="row.Produkttitel">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container-shopping-cart-downer">
+                            <p>{{(row.PreisNetto*row.AnzahlWarenkorb).toFixed(2)}}€ | Nettobetrag </p>
+                            <p>{{row.MWST}}% | Mwst.</p>
+                            <p>{{(row.PreisBrutto*row.AnzahlWarenkorb).toFixed(2)}}€ | Bruttobetrag</p>
+                        </div>
+                    </div>
+                </li>
+                
+                <div class="container-shopping-cart" id="final-price-box">
+                    <p>Gesamtbetrag (Netto): {{shopping_cart_sum_net.toFixed(2)}}€</p>
+                    <p>Mehrwertsteuer: {{shopping_cart_sum_taxes.toFixed(2)}}€</p>
+                    <p>Gesamtbetrag (Brutto): {{shopping_cart_sum_gross.toFixed(2)}}€</p>
+                </div>
+
+                <div class="container">
+                    <div class="container-shopping-cart">                
+                    <transition name="fade-slide">
+                        <template v-if="show_shopping_cart_login && !logged_in">
+                            <div class="shopping-cart-user-login">
+                                <h3>Anmeldung</h3>
+                                <br>
+                                <p>Email</p>
+                                <input v-model="login_email" type="email">
+                                <p>Passwort</p>
+                                <input v-model="login_passwort" type="password">
+                                <br>
+                                <button @click="login()">Anmelden</button>
+                            </div>
+                        </template>
+                    </transition>
+                    <transition name="fade-slide">
+                        <template v-if="!show_shopping_cart_login && !logged_in">
+                            <div class="shopping-cart-user-login">
+                                <h3>Registrierung</h3>
+                                <br>
+                                <p>Nutzername</p>
+                                <input type="text" v-model="login_nutzername">
+                                <p>Email</p>
+                                <input type="email" v-model="login_email">
+                                <p>Passwort</p>
+                                <input type="password" v-model="login_passwort">
+                                <br>
+                                <p>Vorname</p>
+                                <input type="text" v-model="login_vorname">
+                                <p>Name</p>
+                                <input type="text" v-model="login_name">
+                                <p>Straße und Hausnummer</p>
+                                <input type="text" v-model="login_straße">
+                                <p>Ort</p>
+                                <input type="text" v-model="login_ort">
+                                <p>PLZ</p>
+                                <input type="text" v-model="login_plz">
+                                <br>
+                                <button @click="register()">Registrieren</button>
+                            </div>
+                        </template>
+                    </transition>
+                    <transition name="fade-slide">
+                        <template v-if="logged_in">
+                            <div class="shopping-cart-user-login">
+                                <h3>Angemeldet als {{login_nutzername}}</h3>
+                                <br>
+                                <p>Email</p>
+                                <input type="email" :value="login_email" disabled>
+                                <p>Vorname</p>
+                                <input type="text" :value="login_vorname" disabled>
+                                <p>Name</p>
+                                <input type="text" :value="login_name" disabled>
+                                <p>Straße</p>
+                                <input type="text" :value="login_straße" disabled>
+                                <p>Ort</p>
+                                <input type="text" :value="login_ort" disabled>
+                                <p>PLZ</p>
+                                <input type="text" :value="login_plz" disabled>
+                            </div>
+                        </template>
+
+                    </transition>
+                    
+                    <br v-if="!logged_in">
+                    <button class="shopping-cart-switch-user-login-button" @click="show_shopping_cart_login = false" v-if="show_shopping_cart_login && !logged_in">Wechsel zur Registrierung</button>
+                    <button class="shopping-cart-switch-user-login-button" @click="show_shopping_cart_login = true" v-if="!show_shopping_cart_login && !logged_in">Wechsel zur Anmeldung</button>
+                </div>
+                </div>
+
+                <button v-if="!logged_in" id="stripePayButton" class="STRIPE"><span class="material-symbols-outlined">lock</span></button>
+                <button v-if="logged_in" id="stripePayButton" class="STRIPE" @click="startStripePayment()"><span class="material-symbols-outlined">shopping_cart_checkout</span> Bezahlen</button>
+            </div>
+        </template>
+    </transition>
+    
+
+    
+    <button class="static-show-shopping-cart" v-if="!shopping_cart_empty && !shopping_cart_collapsed" @click="check_collapse_shopping_cart()"><span class="material-symbols-outlined">right_panel_close</span></button>
+    <button class="static-show-shopping-cart" v-if="!shopping_cart_empty && shopping_cart_collapsed" @click="check_collapse_shopping_cart()"><span class="material-symbols-outlined">right_panel_open</span></button>
+    </div>
+
+    </body>
+
+    <!-- HIER BEGINNT DAS SCRIPT -->
+
+    <script>
+        const app = Vue.createApp(
+        {
+          data() 
+          {
+            return {
+              search_text: '',
+              catalog_json_data: null,
+              shopping_cart_data: [],
+              shopping_cart_index: [],
+
+              show_shopping_cart: false,
+              shopping_cart_collapsed: false,
+              shopping_cart_empty: true,
+
+              show_shopping_cart_login: true,
+
+              shopping_cart_sum_gross: 0,
+              shopping_cart_sum_net: 0,
+              shopping_cart_sum_taxes: 0, 
+
+              logged_in: false,
+
+              login_nutzername: "",
+              login_email: "",
+              login_passwort: "",
+              login_vorname: "",
+              login_name: "",
+              login_straße: "",
+              login_ort: "",
+              login_plz: ""
+            };
+          },
+
+          methods: 
+          {
+            check_collapse_shopping_cart()
+            {
+                if(this.shopping_cart_collapsed)
+                {
+                    this.shopping_cart_collapsed = false;
+                }
+                else
+                {
+                    this.shopping_cart_collapsed = true;
+                }
+            },
+
+            check_empty_shopping_cart()
+            {
+                if(this.shopping_cart_data.length > 0)
+                {
+                    this.shopping_cart_empty = false;
+                }
+                else
+                {
+                    this.shopping_cart_empty = true;
+                }
+            },
+
+            cart_calc_sum()
+            {
+                this.shopping_cart_sum_gross = 0;
+                this.shopping_cart_sum_net = 0;
+                this.shopping_cart_sum_taxes = 0;
+
+                for(const row of this.shopping_cart_data) 
+                {
+                    this.shopping_cart_sum_gross += row.AnzahlWarenkorb * row.PreisBrutto;
+                    this.shopping_cart_sum_net += row.AnzahlWarenkorb * row.PreisNetto;
+                    this.shopping_cart_sum_taxes += row.AnzahlWarenkorb * row.PreisBrutto - row.AnzahlWarenkorb * row.PreisNetto;
+                }
+            },
+
+            add_one_to_shopping_cart(row)
+            {
+                this.shopping_cart_collapsed = false;
+
+                if(this.catalog_json_data.find(item => item.ProduktID == row.ProduktID).Lagerbestand > 0)
+                {
+                    if(this.shopping_cart_index.includes(row.ProduktID))
+                    {
+                        this.shopping_cart_data.find(item => item.ProduktID == row.ProduktID).AnzahlWarenkorb += 1;
+                    }
+                    else
+                    {
+                        this.shopping_cart_index.push(row.ProduktID);
+                        row.AnzahlWarenkorb = 1;
+                        this.shopping_cart_data.push(row);
+                    }
+
+                    this.catalog_json_data.find(item => item.ProduktID == row.ProduktID).Lagerbestand -= 1;
+                }
+                else
+                {
+                    alert("Das Produkt ist ausverkauft!");
+                }
+
+                this.cart_calc_sum();
+                this.check_empty_shopping_cart();
+            },
+
+            remove_one_from_shopping_cart(row)
+            {
+                this.shopping_cart_collapsed = false;
+
+                if(this.shopping_cart_index.includes(row.ProduktID))
+                {
+                    if(this.shopping_cart_data.find(item => item.ProduktID == row.ProduktID).AnzahlWarenkorb == 1)
+                    {
+                        this.shopping_cart_data.splice(this.shopping_cart_data.findIndex(item => item.ProduktID == row.ProduktID), 1);
+                        this.shopping_cart_index.splice(this.shopping_cart_index.indexOf(row.ProduktID), 1);
+                        this.catalog_json_data.find(item => item.ProduktID == row.ProduktID).Lagerbestand += 1;
+
+                    }
+                    else
+                    {
+                        this.shopping_cart_data.find(item => item.ProduktID == row.ProduktID).AnzahlWarenkorb -= 1;
+                        this.catalog_json_data.find(item => item.ProduktID == row.ProduktID).Lagerbestand += 1;
+                    }
+                }
+
+                this.cart_calc_sum();
+                this.check_empty_shopping_cart();
+            },
+
+            remove_from_shopping_cart(row)
+            {
+                this.shopping_cart_collapsed = false;
+
+                if(this.shopping_cart_index.includes(row.ProduktID))
+                {
+                    this.catalog_json_data.find(item => item.ProduktID == row.ProduktID).Lagerbestand += row.AnzahlWarenkorb;
+                    this.shopping_cart_data.splice(this.shopping_cart_data.findIndex(item => item.ProduktID == row.ProduktID), 1);
+                    this.shopping_cart_index.splice(this.shopping_cart_index.indexOf(row.ProduktID), 1);
+                }
+                
+                this.cart_calc_sum();
+                this.check_empty_shopping_cart();
+            },
+
+
+            fetch_catalog() 
+            {
+                fetch('get_catalog_json.php') 
+
+                .then(response => 
+                {
+                    if (!response.ok) {
+                        throw new Error('Netzwerkfehler!');
+                    }
+                    return response.json();
+                })
+
+                .then(data => 
+                {
+                    this.catalog_json_data = data;
+                })
+
+                .catch(error => 
+                {
+                    console.error('Fehler beim Laden der Daten:', error);
+                });
+            },
+
+            login()
+            {
+                fetch('get_user_data_json.php?email=' + this.login_email + '&passwort=' + this.login_passwort) 
+
+                .then(response => 
+                {
+                    if (!response.ok) {
+                        throw new Error('Netzwerkfehler!');
+                    }
+                    
+                    try {
+                        return response.json();
+                    } catch (error) {
+                        throw new Error('Ungültige JSON-Daten!');
+                    }
+                })
+
+                .then(data => {
+                        console.log(data);
+                        this.customer_id = data.ID;
+                        this.login_name = data.Name;
+                        this.login_nutzername = data.Nutzername;
+                        this.login_email = data.Email;
+                        this.login_ort = data.Ort;
+                        this.login_plz = data.PLZ;
+                        this.login_straße = data.Straße;
+                        this.login_vorname = data.Vorname;
+                        this.login_passwort = "";
+                        this.logged_in = true;
+                })
+
+                .catch(error =>
+                {
+                    alert("Kein Benutzer gefunden!");
+                });
+            },
+
+            register() 
+            {
+                const usernameRegex = /^[a-zA-Z0-9]+$/; // Keine Sonderzeichen, nicht leer
+                const passwordRegex = /^.{5,}$/; // Mindestens 5 Zeichen, nicht leer
+                const emailRegex = /^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,}$/; // Einfache Email-Validierung
+                const nameRegex = /^[a-zA-ZäöüÄÖÜß\- ]+$/; // Nur Buchstaben, Umlaute, Leerzeichen und Bindestriche
+                const streetRegex = /^[a-zA-ZäöüÄÖÜß\-0-9 ]+$/; // Straße mit Zahlen und Buchstaben
+                const ortRegex = /^[a-zA-ZäöüÄÖÜß\- ]+$/; // Nur Buchstaben, Umlaute, Leerzeichen und Bindestriche
+                const plzRegex = /^\d{5}$/; // Fünfstellige Postleitzahl
+
+                const errors = [];
+
+                if(!usernameRegex.test(this.login_nutzername)) {
+                    errors.push("Ungültiger Nutzername");
+                }
+
+                if (!passwordRegex.test(this.login_passwort)) {
+                errors.push("Ungültiges Passwort: Muss mindestens 5 Zeichen lang sein");
+                }
+
+                if (!emailRegex.test(this.login_email)) {
+                    errors.push("Ungültige Email-Adresse");
+                }
+
+                if (!nameRegex.test(this.login_vorname)) {
+                    errors.push("Ungültiger Vorname");
+                }
+
+                if (!nameRegex.test(this.login_name)) {
+                    errors.push("Ungültiger Nachname");
+                }
+
+                if (!streetRegex.test(this.login_straße)) {
+                    errors.push("Ungültige Straße und Hausnummer");
+                }
+
+                if (!ortRegex.test(this.login_ort)) {
+                    errors.push("Ungültiger Ort");
+                }
+
+                if (!plzRegex.test(this.login_plz)) {
+                    errors.push("Ungültige PLZ");
+                }
+
+                if (errors.length > 0) 
+                {
+                    alert("Fehler:\n" + errors.join("\n"));
+                    return;
+                } 
+
+
+                
+
+                fetch('get_user_data_json.php?nutzername=' + this.login_nutzername + '&email=' + this.login_email + '&passwort=' + this.login_passwort + '&vorname=' + this.login_vorname + '&name=' + this.login_name + '&straße=' + this.login_straße + '&ort=' + this.login_ort + '&plz=' + this.login_plz)
+
+                .then(response => 
+                {
+                    if (!response.ok) {
+                        throw new Error('Netzwerkfehler!');
+                    }
+                    
+                    try {
+                        return response.json();
+                    } catch (error) {
+                        throw new Error('Ungültige JSON-Daten!');
+                    }
+                })
+
+                .then(data => {
+                        this.customer_id = data.ID;
+                        this.login_name = data.Name;
+                        this.login_nutzername = data.Nutzername;
+                        this.login_email = data.Email;
+                        this.login_ort = data.Ort;
+                        this.login_plz = data.PLZ;
+                        this.login_straße = data.Straße;
+                        this.login_vorname = data.Vorname;
+                        this.login_passwort = "";
+                        this.logged_in = true;
+                })
+
+                .catch(error =>
+                {
+                    alert("Die Email ist schon registriert!");
+                });
+            },
+
+
+            // Funktion für Stripe-Zahlung
+            startStripePayment() {
+                        const stripe = Stripe("...KEY...");
+
+                        // Einkaufsdetails vorbereiten
+                        const items = this.shopping_cart_data.map(item => ({
+                            id: item.ProduktID, 
+                            name: item.Produkttitel,
+                            price: item.PreisBrutto, 
+                            quantity: item.AnzahlWarenkorb
+                        }));
+                        const totalAmount = this.shopping_cart_sum_gross * 100; // Umrechnung in Cent
+
+                        // HTTP-Anfrage an den Server senden 
+                        fetch('create_checkout_session.php', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            }, // Betrag & Metadaten senden
+                            body: JSON.stringify({ 
+                                amount: totalAmount,
+                                items: items,
+                                customer_id: this.customer_id,
+                                username: this.login_nutzername
+                            }), 
+                        })
+                            .then((response) => {
+                                return response.json();
+                            })
+                            .then((session) => {
+                                if (session.id) {
+                                    stripe.redirectToCheckout({ sessionId: session.id });
+                                } else {
+                                    alert('Fehler beim Erstellen der Stripe-Session.');
+                                }
+                            })
+                            .catch((error) => {
+                                alert('Ein Fehler ist aufgetreten. Bitte erneut versuchen.');
+                            });
+                    }
+          },
+
+
+            mounted()
+            {
+                this.fetch_catalog();
+            }
+        });
+
+        
+        app.mount('#app');
+      </script>
+   
+</html>
